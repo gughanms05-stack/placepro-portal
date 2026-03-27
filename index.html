@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlacePro — Placement Prep Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07080f;
+  --surface: #0f1018;
+  --surface2: #171824;
+  --border: #1e2030;
+  --border2: #282a3e;
+  --text: #dde0f0;
+  --muted: #5a5d7a;
+  --muted2: #8890b0;
+  --core: #f97316;
+  --core-glow: rgba(249,115,22,0.15);
+  --mgmt: #a855f7;
+  --mgmt-glow: rgba(168,85,247,0.15);
+  --analytics: #22d3ee;
+  --analytics-glow: rgba(34,211,238,0.15);
+  --software: #4ade80;
+  --software-glow: rgba(74,222,128,0.15);
+  --accent: #fbbf24;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.013) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.013) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:200;background:rgba(7,8,15,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;height:58px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;letter-spacing:-0.03em;}
+.logo span{color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:.75rem;}
+.header-badge{font-size:.68rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted2);background:var(--surface2);border:1px solid var(--border2);padding:.28rem .75rem;border-radius:999px;}
+.reset-btn{font-size:.68rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:transparent;border:1px solid var(--border2);padding:.28rem .75rem;border-radius:999px;cursor:pointer;transition:all .2s;}
+.reset-btn:hover{color:var(--text);border-color:var(--muted);}
+
+/* HERO */
+.hero{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:3.5rem 2rem 1.5rem;text-align:center;}
+.hero-pill{display:inline-block;font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);padding:.28rem .9rem;border-radius:999px;margin-bottom:1.2rem;}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:800;line-height:1.08;letter-spacing:-.04em;margin-bottom:.9rem;}
+.grad{background:linear-gradient(110deg,var(--core) 0%,var(--mgmt) 50%,var(--analytics) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:var(--muted2);font-weight:300;font-size:1rem;line-height:1.75;max-width:480px;margin:0 auto 2.5rem;}
+
+/* PROGRESS BANNER */
+.progress-banner{position:relative;z-index:1;max-width:860px;margin:0 auto 2.5rem;padding:0 2rem;}
+.progress-inner{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:1.3rem 1.8rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+.progress-label{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;}
+.progress-bar-wrap{flex:1;min-width:120px;height:6px;background:var(--border2);border-radius:999px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--core),var(--mgmt),var(--analytics),var(--software));border-radius:999px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%;}
+.progress-stats{display:flex;gap:1.8rem;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);line-height:1;}
+.stat-lbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.15rem;}
+
+/* TABS */
+.tabs-wrap{position:relative;z-index:1;max-width:860px;margin:0 auto 1.8rem;padding:0 2rem;display:flex;gap:.5rem;flex-wrap:wrap;}
+.tab-btn{display:flex;align-items:center;gap:.45rem;padding:.48rem 1.1rem;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--muted2);font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:500;cursor:pointer;transition:all .18s;outline:none;}
+.tab-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.tab-btn[data-d="all"].active,.tab-btn[data-d="all"]:hover{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--accent);}
+.tab-btn[data-d="core"].active,.tab-btn[data-d="core"]:hover{background:var(--core-glow);border-color:rgba(249,115,22,.4);color:var(--core);}
+.tab-btn[data-d="management"].active,.tab-btn[data-d="management"]:hover{background:var(--mgmt-glow);border-color:rgba(168,85,247,.4);color:var(--mgmt);}
+.tab-btn[data-d="analytics"].active,.tab-btn[data-d="analytics"]:hover{background:var(--analytics-glow);border-color:rgba(34,211,238,.4);color:var(--analytics);}
+.tab-btn[data-d="software"].active,.tab-btn[data-d="software"]:hover{background:var(--software-glow);border-color:rgba(74,222,128,.4);color:var(--software);}
+
+/* SECTIONS */
+.sections-wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 2rem 5rem;display:flex;flex-direction:column;gap:2rem;}
+.domain-block{border-radius:18px;border:1px solid var(--border2);background:var(--surface);overflow:hidden;animation:fadeUp .4s ease both;}
+.domain-block.hidden{display:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* DOMAIN HEADER */
+.domain-head{padding:1.2rem 1.6rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+.domain-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
+.domain-title-wrap{flex:1;}
+.domain-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:-.02em;}
+.domain-sub{font-size:.73rem;color:var(--muted2);margin-top:.1rem;font-weight:300;}
+.domain-ring{width:46px;height:46px;flex-shrink:0;}
+.domain-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--border2);stroke-width:4;}
+.ring-fill{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1);}
+.ring-pct-text{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;fill:var(--text);dominant-baseline:middle;text-anchor:middle;}
+.chevron{color:var(--muted);font-size:1rem;transition:transform .2s;flex-shrink:0;}
+.domain-block.collapsed .chevron{transform:rotate(-90deg);}
+
+/* DRIVE LINKS */
+.drive-links{padding:1rem 1.6rem .8rem;border-bottom:1px solid var(--border);display:flex;gap:.65rem;flex-wrap:wrap;}
+.drive-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.77rem;font-weight:500;padding:.4rem .85rem;border-radius:8px;text-decoration:none;border:1px solid var(--border2);color:var(--muted2);background:var(--surface2);transition:all .18s;}
+.drive-link:hover{color:var(--text);border-color:var(--muted);background:var(--border);}
+.drive-link svg{width:13px;height:13px;flex-shrink:0;}
+
+/* SECTION LABEL */
+.section-label{grid-column:1/-1;font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);padding:.3rem 0 .2rem;border-bottom:1px solid var(--border);margin-bottom:.1rem;}
+
+/* TOPICS GRID */
+.topics-grid{padding:1.2rem 1.6rem 1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.65rem;}
+.domain-block.collapsed .topics-grid,.domain-block.collapsed .drive-links{display:none;}
+
+/* TOPIC CARD */
+.topic-card{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.topic-card:hover{border-color:var(--border2);background:var(--border);}
+.topic-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:.7rem;color:transparent;}
+.topic-card.done .topic-check{color:#fff;border-color:transparent;}
+.topic-name{font-size:.84rem;font-weight:500;color:var(--text);line-height:1.3;}
+.topic-tag{font-size:.63rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:.12rem;}
+.topic-card.done .topic-name{color:var(--muted2);text-decoration:line-through;text-decoration-color:var(--muted);}
+
+/* DOMAIN COLOURS */
+.d-core .domain-icon{background:var(--core-glow);}
+.d-core .domain-title{color:var(--core);}
+.d-core .topic-card.done{background:rgba(249,115,22,.07);}
+.d-core .topic-card.done .topic-check{background:var(--core);}
+.d-core .ring-fill{stroke:var(--core);}
+
+.d-management .domain-icon{background:var(--mgmt-glow);}
+.d-management .domain-title{color:var(--mgmt);}
+.d-management .topic-card.done{background:rgba(168,85,247,.07);}
+.d-management .topic-card.done .topic-check{background:var(--mgmt);}
+.d-management .ring-fill{stroke:var(--mgmt);}
+
+.d-analytics .domain-icon{background:var(--analytics-glow);}
+.d-analytics .domain-title{color:var(--analytics);}
+.d-analytics .topic-card.done{background:rgba(34,211,238,.07);}
+.d-analytics .topic-card.done .topic-check{background:var(--analytics);}
+.d-analytics .ring-fill{stroke:var(--analytics);}
+
+.d-software .domain-icon{background:var(--software-glow);}
+.d-software .domain-title{color:var(--software);}
+.d-software .topic-card.done{background:rgba(74,222,128,.07);}
+.d-software .topic-card.done .topic-check{background:var(--software);}
+.d-software .ring-fill{stroke:var(--software);}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:1.4rem;font-size:.7rem;color:var(--muted);border-top:1px solid var(--border);letter-spacing:.04em;}
+
+/* RESPONSIVE */
+@media(max-width:540px){
+  header{padding:0 1rem;}
+  .hero,.progress-banner,.tabs-wrap,.sections-wrap{padding-left:1rem;padding-right:1rem;}
+  .topics-grid{grid-template-columns:1fr;}
+  .progress-stats{gap:1rem;}
+  .hero h1{font-size:1.9rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Place<span>Pro</span></div>
+  <div class="header-right">
+    <span class="header-badge">CPC Placement Prep</span>
+    <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-pill">🎯 Placement Season · Study Tracker</div>
+  <h1>Your <span class="grad">Placement Prep</span><br>Command Centre</h1>
+  <p>All CPC study materials, domain resources and a personal topic tracker in one place. Check off topics as you go — your progress is saved automatically.</p>
+</section>
+
+<div class="progress-banner">
+  <div class="progress-inner">
+    <div class="progress-label">Overall Progress</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="overallBar"></div>
+    </div>
+    <div class="progress-stats">
+      <div class="stat"><div class="stat-num" id="statDone">0</div><div class="stat-lbl">Done</div></div>
+      <div class="stat"><div class="stat-num" id="statLeft">0</div><div class="stat-lbl">Left</div></div>
+      <div class="stat"><div class="stat-num" id="statPct">0%</div><div class="stat-lbl">Complete</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <button class="tab-btn active" data-d="all" onclick="filterDomain('all')">
+    <span class="tab-dot" style="background:var(--accent)"></span>All Domains
+  </button>
+  <button class="tab-btn" data-d="core" onclick="filterDomain('core')">
+    <span class="tab-dot" style="background:var(--core)"></span>Core
+  </button>
+  <button class="tab-btn" data-d="management" onclick="filterDomain('management')">
+    <span class="tab-dot" style="background:var(--mgmt)"></span>Management
+  </button>
+  <button class="tab-btn" data-d="analytics" onclick="filterDomain('analytics')">
+    <span class="tab-dot" style="background:var(--analytics)"></span>Analytics
+  </button>
+  <button class="tab-btn" data-d="software" onclick="filterDomain('software')">
+    <span class="tab-dot" style="background:var(--software)"></span>Software
+  </button>
+</div>
+
+<div class="sections-wrap" id="sectionsWrap"></div>
+
+<footer>PlacePro &middot; Progress is saved in your browser's local storage &middot; Clear cache will reset progress</footer>
+
+<script>
+const CIRC = 2 * Math.PI * 16;
+
+const DOMAINS = [
+  {
+    id: 'core', label: 'Core Engineering', icon: '⚗️', cls: 'd-core',
+    sub: 'Chemical & Process Engineering fundamentals',
+    links: [
+      { label: '📁 Chemical Study Materials', url: 'https://drive.google.com/drive/folders/1ukWV-JPuPG0uJGPfz81Gkv3wtm80kRcN' },
+      { label: '📁 CPC Materials (Core)', url: 'https://drive.google.com/drive/folders/15TtJw7dMoAleeNmudi7kpkEi_S64OsFg' },
+    ],
+    sections: [
+      { heading: 'Transport Phenomena', topics: ['Fluid Mechanics', 'Heat Transfer', 'Mass Transfer', 'Transport Phenomena Combined'] },
+      { heading: 'Thermodynamics & Reactions', topics: ['Chemical Thermodynamics', 'Chemical Reaction Engineering', 'Catalysis Basics', 'Reaction Kinetics'] },
+      { heading: 'Unit Operations', topics: ['Distillation', 'Absorption & Stripping', 'Extraction', 'Evaporation', 'Drying', 'Filtration & Sedimentation'] },
+      { heading: 'Process Engineering', topics: ['Material & Energy Balances', 'Process Control & Instrumentation', 'Process Safety & Hazards', 'Plant Design & Economics', 'Piping & Equipment Design'] },
+      { heading: 'Interview Prep', topics: ['Core Technical Q&A', 'HR & Behavioural Questions', 'Group Discussion Practice', 'Company Research Notes'] },
+    ]
+  },
+  {
+    id: 'management', label: 'Management', icon: '📊', cls: 'd-management',
+    sub: 'MBA, Consulting & Operations roles',
+    links: [
+      { label: '📁 CPC Materials (Management)', url: 'https://drive.google.com/drive/folders/15TtJw7dMoAleeNmudi7kpkEi_S64OsFg' },
+    ],
+    sections: [
+      { heading: 'Business Fundamentals', topics: ['Supply Chain Management', 'Operations Management', 'Project Management (PMP)', 'Financial Accounting Basics', 'Marketing Fundamentals', 'Organisational Behaviour'] },
+      { heading: 'Case Study Prep', topics: ['Case Interview Framework', 'Profitability Cases', 'Market Sizing', 'M&A & Growth Strategy', 'Operations Cases', 'Guesstimate Practice'] },
+      { heading: 'Aptitude & Reasoning', topics: ['Quantitative Aptitude', 'Logical Reasoning', 'Data Interpretation', 'Verbal Ability & Reading Comp.', 'Puzzles & Brain Teasers'] },
+      { heading: 'Interview Prep', topics: ['Consulting HR Questions', 'Resume & Cover Letter', 'Mock Group Discussion', 'Leadership Stories (STAR Method)'] },
+    ]
+  },
+  {
+    id: 'analytics', label: 'Analytics', icon: '📈', cls: 'd-analytics',
+    sub: 'Data Science, BI & Analytics roles',
+    links: [
+      { label: '📁 CPC Materials (Analytics)', url: 'https://drive.google.com/drive/folders/15TtJw7dMoAleeNmudi7kpkEi_S64OsFg' },
+    ],
+    sections: [
+      { heading: 'Statistics & Mathematics', topics: ['Descriptive Statistics', 'Probability & Distributions', 'Hypothesis Testing', 'Regression Analysis', 'Linear Algebra Basics', 'A/B Testing'] },
+      { heading: 'Tools & Programming', topics: ['Python for Data Analysis', 'Pandas & NumPy', 'SQL — Queries & Joins', 'Power BI / Tableau', 'Excel Advanced Functions', 'R Programming Basics'] },
+      { heading: 'Machine Learning', topics: ['Supervised Learning (Classification, Regression)', 'Unsupervised Learning (Clustering)', 'Model Evaluation Metrics', 'Feature Engineering', 'Time Series Analysis', 'NLP Basics'] },
+      { heading: 'Interview Prep', topics: ['Analytics Case Studies', 'Product Metrics Questions', 'SQL Interview Problems', 'Statistics Interview Q&A'] },
+    ]
+  },
+  {
+    id: 'software', label: 'Software', icon: '💻', cls: 'd-software',
+    sub: 'SDE, SWE & Tech Product roles',
+    links: [
+      { label: '📁 CPC Materials (Software)', url: 'https://drive.google.com/drive/folders/15TtJw7dMoAleeNmudi7kpkEi_S64OsFg' },
+    ],
+    sections: [
+      { heading: 'Data Structures & Algorithms', topics: ['Arrays & Strings', 'Linked Lists', 'Stacks & Queues', 'Trees & Binary Trees', 'Graphs (BFS/DFS)', 'Sorting & Searching', 'Dynamic Programming', 'Greedy Algorithms', 'Recursion & Backtracking'] },
+      { heading: 'Core CS Subjects', topics: ['DBMS & SQL', 'Operating Systems', 'Computer Networks', 'OOP Concepts', 'System Design Basics', 'Compiler Design Basics'] },
+      { heading: 'Development Fundamentals', topics: ['HTML/CSS Basics', 'JavaScript Essentials', 'REST APIs', 'Git & Version Control', 'Linux & Command Line'] },
+      { heading: 'Interview Prep', topics: ['LeetCode Easy (30 problems)', 'LeetCode Medium (30 problems)', 'Behavioural Questions', 'Competitive Programming', 'Mock Coding Interviews'] },
+    ]
+  }
+];
+
+const STORE_KEY = 'placepro_v2';
+let state = {};
+
+function loadState() { try { state = JSON.parse(localStorage.getItem(STORE_KEY)||'{}'); } catch { state={}; } }
+function saveState() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+function tKey(d, t) { return d+'::'+t; }
+
+function buildUI() {
+  const wrap = document.getElementById('sectionsWrap');
+  wrap.innerHTML = '';
+
+  DOMAINS.forEach(domain => {
+    const block = document.createElement('div');
+    block.className = 'domain-block ' + domain.cls;
+    block.dataset.domain = domain.id;
+
+    const allTopics = domain.sections.flatMap(s => s.topics);
+
+    // Build topics html grouped by section
+    let topicsHTML = '';
+    domain.sections.forEach(sec => {
+      topicsHTML += `<div class="section-label">${sec.heading}</div>`;
+      sec.topics.forEach(topic => {
+        const key = tKey(domain.id, topic);
+        const done = !!state[key];
+        const safeId = 'c-' + key.replace(/[^a-zA-Z0-9]/g,'_');
+        topicsHTML += `
+          <div class="topic-card${done?' done':''}" id="${safeId}" onclick="toggleTopic('${domain.id}','${topic.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
+            <div class="topic-check">${done?'✓':''}</div>
+            <div>
+              <div class="topic-name">${topic}</div>
+              <div class="topic-tag">${sec.heading}</div>
+            </div>
+          </div>`;
+      });
+    });
+
+    block.innerHTML = `
+      <div class="domain-head" onclick="toggleCollapse('${domain.id}')">
+        <div class="domain-icon">${domain.icon}</div>
+        <div class="domain-title-wrap">
+          <div class="domain-title">${domain.label}</div>
+          <div class="domain-sub">${domain.sub}</div>
+        </div>
+        <div class="domain-ring">
+          <svg viewBox="0 0 40 40">
+            <circle class="ring-bg" cx="20" cy="20" r="16"/>
+            <circle class="ring-fill" id="ring-${domain.id}" cx="20" cy="20" r="16"
+              stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC}"/>
+            <text class="ring-pct-text" id="rpt-${domain.id}" x="20" y="21">0%</text>
+          </svg>
+        </div>
+        <div class="chevron">▾</div>
+      </div>
+      <div class="drive-links">
+        ${domain.links.map(l=>`
+          <a class="drive-link" href="${l.url}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>${l.label}
+          </a>`).join('')}
+      </div>
+      <div class="topics-grid">${topicsHTML}</div>
+    `;
+
+    wrap.appendChild(block);
+    updateRing(domain.id);
+  });
+
+  updateOverall();
+}
+
+function toggleTopic(domainId, topic) {
+  const key = tKey(domainId, topic);
+  state[key] = !state[key];
+  saveState();
+  const safeId = 'c-' + key.replace(/[^a-zA-Z0-9]/g,'_');
+  const card = document.getElementById(safeId);
+  if (card) {
+    card.classList.toggle('done', state[key]);
+    card.querySelector('.topic-check').textContent = state[key] ? '✓' : '';
+  }
+  updateRing(domainId);
+  updateOverall();
+}
+
+function updateRing(domainId) {
+  const domain = DOMAINS.find(d=>d.id===domainId);
+  const all = domain.sections.flatMap(s=>s.topics);
+  const done = all.filter(t=>state[tKey(domainId,t)]).length;
+  const pct = all.length ? Math.round(done/all.length*100) : 0;
+  const offset = CIRC - (pct/100)*CIRC;
+  const ring = document.getElementById('ring-'+domainId);
+  const rpt  = document.getElementById('rpt-'+domainId);
+  if(ring) ring.style.strokeDashoffset = offset;
+  if(rpt)  rpt.textContent = pct+'%';
+}
+
+function updateOverall() {
+  let total=0, done=0;
+  DOMAINS.forEach(d=>{
+    const all = d.sections.flatMap(s=>s.topics);
+    total += all.length;
+    done  += all.filter(t=>state[tKey(d.id,t)]).length;
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('overallBar').style.width = pct+'%';
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statLeft').textContent = total-done;
+  document.getElementById('statPct').textContent  = pct+'%';
+}
+
+function toggleCollapse(domainId) {
+  document.querySelector(`[data-domain="${domainId}"]`).classList.toggle('collapsed');
+}
+
+function filterDomain(d) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.d===d));
+  document.querySelectorAll('.domain-block').forEach(block=>{
+    block.classList.toggle('hidden', d!=='all' && block.dataset.domain!==d);
+  });
+}
+
+function resetAll() {
+  if(!confirm('Reset ALL progress? This cannot be undone.')) return;
+  state = {};
+  saveState();
+  buildUI();
+}
+
+loadState();
+buildUI();
+</script>
+</body>
+</html>
